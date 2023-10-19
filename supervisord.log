@@ -1,0 +1,90 @@
+2023-10-19 09:58:48,870 INFO Set uid to user 0 succeeded
+2023-10-19 09:58:48,872 INFO supervisord started with pid 1
+2023-10-19 09:58:49,873 INFO spawned: 'nginx' with pid 7
+2023-10-19 09:58:49,876 INFO spawned: 'php-fpm' with pid 8
+2023-10-19 09:58:50,909 INFO success: nginx entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2023-10-19 09:58:50,909 INFO success: php-fpm entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2023-10-19 11:59:33,340 WARN received SIGTERM indicating exit request
+2023-10-19 11:59:33,345 INFO waiting for nginx, php-fpm to die
+2023-10-19 11:59:34,348 INFO stopped: php-fpm (exit status 0)
+2023-10-19 11:59:34,361 INFO stopped: nginx (exit status 0)
+2023-10-19 11:59:34,808 INFO Set uid to user 0 succeeded
+2023-10-19 11:59:34,810 INFO supervisord started with pid 1
+2023-10-19 11:59:35,825 INFO spawned: 'nginx' with pid 7
+2023-10-19 11:59:35,830 INFO spawnerr: can't find command '/usr/sbin/php-fpm'
+2023-10-19 11:59:36,848 INFO success: nginx entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2023-10-19 11:59:36,848 INFO spawnerr: can't find command '/usr/sbin/php-fpm'
+2023-10-19 11:59:38,851 INFO spawnerr: can't find command '/usr/sbin/php-fpm'
+2023-10-19 11:59:41,864 INFO spawnerr: can't find command '/usr/sbin/php-fpm'
+2023-10-19 11:59:41,865 INFO gave up: php-fpm entered FATAL state, too many start retries too quickly
+2023-10-19 12:01:06,174 WARN received SIGTERM indicating exit request
+2023-10-19 12:01:06,175 INFO waiting for nginx to die
+2023-10-19 12:01:07,198 INFO stopped: nginx (exit status 0)
+2023-10-19 12:01:07,567 INFO Set uid to user 0 succeeded
+2023-10-19 12:01:07,568 INFO supervisord started with pid 1
+2023-10-19 12:01:08,570 INFO spawned: 'nginx' with pid 7
+2023-10-19 12:01:08,571 INFO spawnerr: can't find command '/usr/sbin/php-fpm'
+2023-10-19 12:01:09,580 INFO success: nginx entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2023-10-19 12:01:09,582 INFO spawnerr: can't find command '/usr/sbin/php-fpm'
+2023-10-19 12:01:11,585 INFO spawnerr: can't find command '/usr/sbin/php-fpm'
+2023-10-19 12:01:14,593 INFO spawnerr: can't find command '/usr/sbin/php-fpm'
+2023-10-19 12:01:14,597 INFO gave up: php-fpm entered FATAL state, too many start retries too quickly
+2023-10-19 12:01:55,711 WARN received SIGTERM indicating exit request
+2023-10-19 12:01:55,712 INFO waiting for nginx to die
+2023-10-19 12:01:56,748 INFO stopped: nginx (exit status 0)
+2023-10-19 12:01:57,145 INFO Set uid to user 0 succeeded
+2023-10-19 12:01:57,146 INFO supervisord started with pid 1
+2023-10-19 12:01:58,148 INFO spawned: 'nginx' with pid 7
+2023-10-19 12:01:58,150 INFO spawnerr: can't find command '/usr/sbin/php-fpm'
+2023-10-19 12:01:59,157 INFO success: nginx entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2023-10-19 12:01:59,157 INFO spawnerr: can't find command '/usr/sbin/php-fpm'
+2023-10-19 12:02:01,159 INFO spawnerr: can't find command '/usr/sbin/php-fpm'
+2023-10-19 12:02:04,170 INFO spawnerr: can't find command '/usr/sbin/php-fpm'
+2023-10-19 12:02:04,171 INFO gave up: php-fpm entered FATAL state, too many start retries too quickly
+2023-10-19 12:11:50,984 INFO reaped unknown pid 177 (terminated by SIGTERM)
+2023-10-19 12:14:13,456 WARN received SIGTERM indicating exit request
+2023-10-19 12:14:13,460 INFO waiting for nginx to die
+2023-10-19 12:14:14,482 INFO stopped: nginx (exit status 0)
+2023-10-19 12:14:15,993 INFO Set uid to user 0 succeeded
+2023-10-19 12:14:15,994 INFO supervisord started with pid 1
+2023-10-19 12:14:16,997 INFO spawned: 'nginx' with pid 7
+2023-10-19 12:14:16,999 INFO spawnerr: can't find command '/usr/sbin/php-fpm'
+2023-10-19 12:14:18,013 INFO success: nginx entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2023-10-19 12:14:18,014 INFO spawnerr: can't find command '/usr/sbin/php-fpm'
+2023-10-19 12:14:20,022 INFO spawnerr: can't find command '/usr/sbin/php-fpm'
+2023-10-19 12:14:23,030 INFO spawnerr: can't find command '/usr/sbin/php-fpm'
+2023-10-19 12:14:23,031 INFO gave up: php-fpm entered FATAL state, too many start retries too quickly
+2023-10-19 12:15:21,105 INFO reaped unknown pid 131 (terminated by SIGTERM)
+2023-10-19 12:35:23,436 WARN received SIGTERM indicating exit request
+2023-10-19 12:35:23,437 INFO waiting for nginx to die
+2023-10-19 12:35:24,479 INFO stopped: nginx (exit status 0)
+2023-10-19 12:35:25,997 INFO Set uid to user 0 succeeded
+2023-10-19 12:35:25,999 INFO supervisord started with pid 1
+2023-10-19 12:35:27,001 INFO spawned: 'nginx' with pid 7
+2023-10-19 12:35:27,002 INFO spawnerr: can't find command '/usr/sbin/php-fpm'
+2023-10-19 12:35:28,010 INFO success: nginx entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2023-10-19 12:35:28,011 INFO spawnerr: can't find command '/usr/sbin/php-fpm'
+2023-10-19 12:35:30,013 INFO spawnerr: can't find command '/usr/sbin/php-fpm'
+2023-10-19 12:35:33,025 INFO spawnerr: can't find command '/usr/sbin/php-fpm'
+2023-10-19 12:35:33,029 INFO gave up: php-fpm entered FATAL state, too many start retries too quickly
+2023-10-19 12:38:06,563 WARN received SIGTERM indicating exit request
+2023-10-19 12:38:06,564 INFO waiting for nginx to die
+2023-10-19 12:38:07,604 INFO stopped: nginx (exit status 0)
+2023-10-19 12:38:08,119 INFO Set uid to user 0 succeeded
+2023-10-19 12:38:08,121 INFO supervisord started with pid 1
+2023-10-19 12:38:09,123 INFO spawned: 'nginx' with pid 7
+2023-10-19 12:38:09,124 INFO spawned: 'php-fpm' with pid 8
+2023-10-19 12:38:10,177 INFO success: nginx entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2023-10-19 12:38:10,177 INFO success: php-fpm entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2023-10-19 12:39:52,394 INFO reaped unknown pid 134 (terminated by SIGTERM)
+2023-10-19 12:41:34,731 WARN received SIGTERM indicating exit request
+2023-10-19 12:41:34,732 INFO waiting for nginx, php-fpm to die
+2023-10-19 12:41:34,758 INFO stopped: php-fpm (exit status 0)
+2023-10-19 12:41:34,791 INFO stopped: nginx (exit status 0)
+2023-10-19 12:41:36,139 INFO Set uid to user 0 succeeded
+2023-10-19 12:41:36,140 INFO supervisord started with pid 1
+2023-10-19 12:41:37,142 INFO spawned: 'nginx' with pid 7
+2023-10-19 12:41:37,144 INFO spawned: 'php-fpm' with pid 8
+2023-10-19 12:41:38,173 INFO success: nginx entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2023-10-19 12:41:38,175 INFO success: php-fpm entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2023-10-19 12:42:48,261 INFO reaped unknown pid 136 (terminated by SIGTERM)

@@ -1,0 +1,9 @@
+alexispe_sylius_round_up_shop:
+    resource: "@AlexispeSyliusRoundUpPlugin/config/shop_routing.yml"
+    prefix: /{_locale}
+    requirements:
+        _locale: ^[a-z]{2}(?:_[A-Z]{2})?$
+
+alexispe_sylius_round_up_admin:
+    resource: "@AlexispeSyliusRoundUpPlugin/config/admin_routing.yml"
+    prefix: /admin
