@@ -1,0 +1,5 @@
+alexispe_sylius_round_up_plugin:
+    ui:
+        round_up_cart: Arrondir le panier
+    product:
+        round_up: Arrondi

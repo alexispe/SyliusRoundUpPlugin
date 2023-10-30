@@ -1,13 +1,13 @@
 # Delete these routes and define your own shop routes here
 
-acme_sylius_example_static_welcome:
-    path: /static-welcome/{name}
+alexispe_sylius_round_up_plugin_shop_round_up_cart:
+    path: /cart/round-up
+    methods: [POST]
     defaults:
-        _controller: Acme\SyliusExamplePlugin\Controller\GreetingController::staticallyGreetAction
-        name: ~
-
-acme_sylius_example_dynamic_welcome:
-    path: /dynamic-welcome/{name}
-    defaults:
-        _controller: Acme\SyliusExamplePlugin\Controller\GreetingController::dynamicallyGreetAction
-        name: ~
+        _controller: Alexispe\SyliusRoundUpPlugin\Action\Shop\RoundUpCartAction
+        _format: json
+        _sylius:
+            redirect:
+                route: sylius_shop_cart_summary
+                parameters: {}
+            flash: sylius.cart.add_item

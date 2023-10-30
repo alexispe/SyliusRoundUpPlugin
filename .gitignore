@@ -17,4 +17,5 @@
 /.php-version
 /php.ini
 
+.idea
 supervisord.log

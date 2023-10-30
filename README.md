@@ -1,46 +1,51 @@
-<p align="center">
-    <a href="https://sylius.com" target="_blank">
-        <img src="https://demo.sylius.com/assets/shop/img/logo.png" />
-    </a>
-</p>
+# SyliusRoundUpPlugin
 
-<h1 align="center">Plugin Skeleton</h1>
+This plugin simply round up your cart.
 
-<p align="center">Skeleton for starting Sylius plugins.</p>
+## Installation
 
-## Documentation
+### 1. Composer
 
-For a comprehensive guide on Sylius Plugins development please go to Sylius documentation,
-there you will find the <a href="https://docs.sylius.com/en/latest/plugin-development-guide/index.html">Plugin Development Guide</a>, that is full of examples.
+`composer require alexispe/sylius-round-up-plugin`
 
-## Quickstart Installation
+### 2. Load bundle
 
-### Traditional
+Add to the bundle list in `config/bundles.php`:
 
-1. Run `composer create-project sylius/plugin-skeleton ProjectName`.
+```php
+<?php
 
-2. From the plugin skeleton root directory, run the following commands:
+return [
+    // ...
+    Alexispe\SyliusRoundUpPlugin\AlexispeSyliusRoundUpPlugin::class => ['all' => true],
+    // ...
+];
+```
 
-    ```bash
-    $ (cd tests/Application && yarn install)
-    $ (cd tests/Application && yarn build)
-    $ (cd tests/Application && APP_ENV=test bin/console assets:install public)
-    
-    $ (cd tests/Application && APP_ENV=test bin/console doctrine:database:create)
-    $ (cd tests/Application && APP_ENV=test bin/console doctrine:schema:create)
-    ```
+### 3. Load configuration
 
-To be able to set up a plugin's database, remember to configure you database credentials in `tests/Application/.env` and `tests/Application/.env.test`.
+Add to the imports list in `config/packages/_sylius.yaml`:
 
-### Docker
+```yaml
+imports:
+    ...
+    - { resource: "@AlexispeSyliusRoundUpPlugin/config/config.yml" }
+```
+
+### 4. Create round up product
+```
+bin/console alexispe:round-up:create-product
+```
+
+## Contribute
+
+### Quickstart Installation
 
 1. Execute `docker compose up -d`
 
 2. Initialize plugin `docker compose exec app make init`
 
 3. See your browser `open localhost`
-
-## Usage
 
 ### Running plugin tests
 
@@ -103,20 +108,4 @@ To be able to set up a plugin's database, remember to configure you database cre
   
     ```bash
     vendor/bin/ecs check
-    ```
-
-### Opening Sylius with your plugin
-
-- Using `test` environment:
-
-    ```bash
-    (cd tests/Application && APP_ENV=test bin/console sylius:fixtures:load)
-    (cd tests/Application && APP_ENV=test bin/console server:run -d public)
-    ```
-    
-- Using `dev` environment:
-
-    ```bash
-    (cd tests/Application && APP_ENV=dev bin/console sylius:fixtures:load)
-    (cd tests/Application && APP_ENV=dev bin/console server:run -d public)
     ```

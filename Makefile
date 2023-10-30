@@ -24,10 +24,17 @@ frontend:
 	(cd tests/Application && yarn install --pure-lockfile)
 	(cd tests/Application && GULP_ENV=prod yarn build)
 
+cache-clear:
+	tests/Application/bin/console cache:clear
+
 behat:
 	APP_ENV=test vendor/bin/behat --colors --strict --no-interaction -vvv -f progress
 
-init: install backend frontend
+create-round-up-product:
+	tests/Application/bin/console alexispe:round-up:create-product
+
+
+init: install backend frontend create-round-up-product
 
 ci: init phpstan psalm phpunit phpspec behat
 

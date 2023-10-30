@@ -1,0 +1,43 @@
+parameters:
+    alexispe_sylius_round_up_plugin.order_item_quantity_modifier.limit: 1
+    alexispe_sylius_round_up_plugin.round_up_product_code: 'ROUND_UP'
+
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+        public: false
+        
+    Alexispe\SyliusRoundUpPlugin\Action\Shop\RoundUpCartAction:
+        arguments:
+            $metadata: '@=service("sylius.resource_registry").get("sylius.order_item")'
+            $entityManager: '@sylius.manager.order'
+            $cartItemFactory: '@sylius.custom_factory.order_item'
+            $authorizationChecker: '@sylius.resource_controller.authorization_checker.disabled'
+            $orderItemQuantityModifier: '@alexispe_sylius_round_up_plugin.order_item_quantity_modifier.limiting'
+
+    Alexispe\SyliusRoundUpPlugin\Resolver\RoundUpProductResolver:
+        arguments:
+            $roundUpProductCode: '%alexispe_sylius_round_up_plugin.round_up_product_code%'
+            $productRepository: '@sylius.repository.product'
+    
+    alexispe_sylius_round_up_plugin.resolver.round_up_product_resolver:
+        alias: Alexispe\SyliusRoundUpPlugin\Resolver\RoundUpProductResolver
+    
+    Alexispe\SyliusRoundUpPlugin\Calculator\RoundUpPriceCalculator:
+        arguments:
+            $roundUpProductResolver: '@alexispe_sylius_round_up_plugin.resolver.round_up_product_resolver'
+    
+    alexispe_sylius_round_up_plugin.order_item_quantity_modifier.limiting:
+        class: Sylius\Component\Core\Cart\Modifier\LimitingOrderItemQuantityModifier
+        decorates: sylius.order_item_quantity_modifier
+        arguments:
+            - '@sylius.order_item_quantity_modifier.limiting.inner'
+            - '%alexispe_sylius_round_up_plugin.order_item_quantity_modifier.limit%'
+    
+    alexispe_sylius_round_up_plugin.command.create_round_up_product:
+        class: Alexispe\SyliusRoundUpPlugin\Command\CreateRoundUpProductCommand
+        arguments:
+            $roundUpProductCode: '%alexispe_sylius_round_up_plugin.round_up_product_code%'
+        tags:
+            - { name: console.command }

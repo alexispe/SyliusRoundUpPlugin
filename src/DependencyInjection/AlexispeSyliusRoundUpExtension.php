@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the SyliusRoundUpPlugin package.
+ *
+ * (c) Alexis Petit
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 declare(strict_types=1);
 
 namespace Alexispe\SyliusRoundUpPlugin\DependencyInjection;
@@ -9,7 +18,7 @@ use Sylius\Bundle\ResourceBundle\DependencyInjection\Extension\AbstractResourceE
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
-use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
+use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 
 final class AlexispeSyliusRoundUpExtension extends AbstractResourceExtension implements PrependExtensionInterface
 {
@@ -18,9 +27,9 @@ final class AlexispeSyliusRoundUpExtension extends AbstractResourceExtension imp
     /** @psalm-suppress UnusedVariable */
     public function load(array $configs, ContainerBuilder $container): void
     {
-        $loader = new XmlFileLoader($container, new FileLocator(__DIR__ . '/../../config'));
+        $loader = new YamlFileLoader($container, new FileLocator(__DIR__ . '/../../config'));
 
-        $loader->load('services.xml');
+        $loader->load('services.yml');
     }
 
     public function prepend(ContainerBuilder $container): void

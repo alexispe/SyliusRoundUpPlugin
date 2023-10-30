@@ -1,0 +1,7 @@
+sylius_ui:
+    events:
+        sylius.shop.cart.summary:
+            blocks:
+                alexispe_roundup_plugin_add_to_cart:
+                    template: '@AlexispeSyliusRoundUpPlugin/Shop/_add_to_cart.html.twig'
+                    priority: 15
