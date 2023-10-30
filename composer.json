@@ -1,4 +1,6 @@
 {
+    "name": "alexispe/sylius-round-up-plugin",
+    "description": "This plugin allows you to round up the total of the cart.",
     "type": "sylius-plugin",
     "keywords": [
         "sylius",
