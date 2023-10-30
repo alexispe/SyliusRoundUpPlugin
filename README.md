@@ -2,6 +2,8 @@
 
 This plugin simply round up your cart.
 
+![Screenshot of cart page](https://github.com/alexispe/SyliusRoundUpPlugin/blob/main/docs/demo-cart.png?raw=true)
+
 ## Installation
 
 ### 1. Composer
