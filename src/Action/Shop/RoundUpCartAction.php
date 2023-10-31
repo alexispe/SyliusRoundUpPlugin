@@ -32,7 +32,7 @@ use Sylius\Component\Order\Modifier\OrderItemQuantityModifierInterface;
 use Sylius\Component\Order\Modifier\OrderModifierInterface;
 use Sylius\Component\Resource\Metadata\MetadataInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\DependencyInjection\Container;
+use Psr\Container\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -52,10 +52,9 @@ final class RoundUpCartAction extends AbstractController
     private OrderItemQuantityModifierInterface $orderItemQuantityModifier;
     private AuthorizationCheckerInterface $authorizationChecker;
     private RoundUpProductResolver $roundUpProductResolver;
-    private RoundUpPriceCalculator $roundUpPriceCalculator;
 
     public function __construct(
-        Container $container,
+        ContainerInterface $container,
         MetadataInterface $metadata,
         RequestConfigurationFactoryInterface $requestConfigurationFactory,
         ?ViewHandlerInterface $viewHandler,
@@ -67,8 +66,7 @@ final class RoundUpCartAction extends AbstractController
         EntityManagerInterface $entityManager,
         CartItemFactoryInterface $cartItemFactory,
         OrderItemQuantityModifierInterface $orderItemQuantityModifier,
-        RoundUpProductResolver $roundUpProductResolver,
-        RoundUpPriceCalculator $roundUpPriceCalculator
+        RoundUpProductResolver $roundUpProductResolver
     ) {
         $this->container = $container;
         $this->metadata = $metadata;
@@ -83,7 +81,6 @@ final class RoundUpCartAction extends AbstractController
         $this->orderItemQuantityModifier = $orderItemQuantityModifier;
         $this->authorizationChecker = $authorizationChecker;
         $this->roundUpProductResolver = $roundUpProductResolver;
-        $this->roundUpPriceCalculator = $roundUpPriceCalculator;
     }
 
     public function __invoke(Request $request): Response
@@ -112,10 +109,6 @@ final class RoundUpCartAction extends AbstractController
         $cartManager->flush();
 
         $orderItem = $this->resolveAddedOrderItem($cart, $orderItem);
-
-        $orderItem->setUnitPrice($this->roundUpPriceCalculator->calculate($cart));
-        $cartManager->persist($orderItem);
-        $cartManager->flush();
 
         $resourceControllerEvent = $this->eventDispatcher->dispatchPostEvent(CartActions::ADD, $configuration, $orderItem);
         if ($resourceControllerEvent->hasResponse()) {

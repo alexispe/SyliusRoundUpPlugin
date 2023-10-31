@@ -32,15 +32,15 @@ class RoundUpPriceCalculator {
         $total = $cart->getTotal();
 
         if ($cart instanceof \Sylius\Component\Core\Model\OrderInterface) {
-            $cart->getItems()->filter(function(\Sylius\Component\Core\Model\OrderItemInterface $item) {
+            $items = $cart->getItems()->filter(function(\Sylius\Component\Core\Model\OrderItemInterface $item) {
                 return $item->getProduct() === $this->roundUpProductResolver->resolve();
-            })->map(function(OrderItemInterface $item) use (&$total) {
-                Assert::integer($total);
-                $total -= $item->getTotal();
             });
+
+            foreach ($items as $item) {
+                $total -= $item->getTotal();
+            }
         }
 
-        Assert::integer($total);
         $decimal = $total % 100;
 
         return 100 - $decimal;
