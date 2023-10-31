@@ -14,7 +14,9 @@ declare(strict_types=1);
 namespace Alexispe\SyliusRoundUpPlugin\Calculator;
 
 use Alexispe\SyliusRoundUpPlugin\Resolver\RoundUpProductResolver;
+use Sylius\Component\Order\Model\OrderItemInterface;
 use Sylius\Component\Order\Model\OrderInterface;
+use Webmozart\Assert\Assert;
 
 class RoundUpPriceCalculator {
     private RoundUpProductResolver $roundUpProductResolver;
@@ -29,12 +31,16 @@ class RoundUpPriceCalculator {
     {
         $total = $cart->getTotal();
 
-        $cart->getItems()->filter(function($item) {
-            return $item->getProduct() === $this->roundUpProductResolver->resolve();
-        })->map(function($item) use (&$total) {
-            $total -= $item->getTotal();
-        });
+        if ($cart instanceof \Sylius\Component\Core\Model\OrderInterface) {
+            $cart->getItems()->filter(function(\Sylius\Component\Core\Model\OrderItemInterface $item) {
+                return $item->getProduct() === $this->roundUpProductResolver->resolve();
+            })->map(function(OrderItemInterface $item) use (&$total) {
+                Assert::integer($total);
+                $total -= $item->getTotal();
+            });
+        }
 
+        Assert::integer($total);
         $decimal = $total % 100;
 
         return 100 - $decimal;

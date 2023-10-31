@@ -31,6 +31,6 @@ class RoundUpProductResolver {
 
     public function resolve(): ?ProductInterface
     {
-        return $this->productRepository->findOneByCode('ROUND_UP');
+        return $this->productRepository->findOneByCode($this->roundUpProductCode);
     }
 }

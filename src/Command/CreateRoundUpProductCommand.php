@@ -17,6 +17,7 @@ use Sylius\Component\Channel\Repository\ChannelRepositoryInterface;
 use Sylius\Component\Core\Model\ChannelPricing;
 use Sylius\Component\Core\Model\ChannelPricingInterface;
 use Sylius\Component\Core\Model\ProductInterface;
+use Sylius\Component\Core\Model\ProductVariantInterface;
 use Sylius\Component\Core\Repository\ProductRepositoryInterface;
 use Sylius\Component\Core\Repository\ProductVariantRepositoryInterface;
 use Sylius\Component\Product\Factory\ProductFactoryInterface;
@@ -69,8 +70,8 @@ class CreateRoundUpProductCommand extends Command
     {
         $io = new SymfonyStyle($input, $output);
 
-        if ($existingProduct = $this->productRepository->findOneByCode($this->roundUpProductCode)) {
-            if ($input->getOption('force')) {
+        if (($existingProduct = $this->productRepository->findOneByCode($this->roundUpProductCode)) !== null) {
+            if (true === $input->getOption('force')) {
                 $this->productRepository->remove($existingProduct);
             } else {
                 $io->error('Product already exists, use --force to delete it');
@@ -86,13 +87,15 @@ class CreateRoundUpProductCommand extends Command
         $product->setSlug('round-up');
         $product->setEnabled(true);
 
+        /** @var ProductVariantInterface $productVariant */
         $productVariant = $this->productVariantFactory->createNew();
         $productVariant->setCode($this->roundUpProductCode);
 
+        /** @var ChannelPricingInterface[] $channels */
         $channels = $this->channelRepository->findAll();
         foreach ($channels as $channel) {
             $channelPricing = new ChannelPricing();
-            $channelPricing->setChannelCode($channel->getCode());
+            $channelPricing->setChannelCode($channel->getChannelCode());
             $channelPricing->setPrice(0);
             $channelPricing->setOriginalPrice(0);
             $productVariant->addChannelPricing($channelPricing);
