@@ -1,5 +1,7 @@
 # SyliusRoundUpPlugin
 
+![Build workflow status](https://github.com/alexispe/SyliusRoundUpPlugin/actions/workflows/build.yml/badge.svg)
+
 This plugin simply round up your cart.
 
 ![Screenshot of cart page](https://github.com/alexispe/SyliusRoundUpPlugin/blob/main/docs/demo-cart.png?raw=true)
