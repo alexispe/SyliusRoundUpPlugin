@@ -16,14 +16,11 @@ namespace Alexispe\SyliusRoundUpPlugin\Resolver;
 use Sylius\Component\Core\Model\OrderInterface;
 use Sylius\Component\Core\Model\OrderItemInterface;
 
-class RoundUpOrderItemResolver {
-
-    private string $roundUpProductCode;
-
+class RoundUpOrderItemResolver
+{
     public function __construct(
-        string $roundUpProductCode,
+        private string $roundUpProductCode,
     ) {
-        $this->roundUpProductCode = $roundUpProductCode;
     }
 
     public function resolve(OrderInterface $order): ?OrderItemInterface

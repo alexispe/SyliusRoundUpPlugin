@@ -19,7 +19,6 @@ use Sylius\Component\Core\Model\ChannelPricingInterface;
 use Sylius\Component\Core\Model\ProductInterface;
 use Sylius\Component\Core\Model\ProductVariantInterface;
 use Sylius\Component\Core\Repository\ProductRepositoryInterface;
-use Sylius\Component\Core\Repository\ProductVariantRepositoryInterface;
 use Sylius\Component\Product\Factory\ProductFactoryInterface;
 use Sylius\Component\Product\Factory\ProductVariantFactoryInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -33,28 +32,15 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 #[AsCommand(name: 'alexispe:round-up:create-product')]
 class CreateRoundUpProductCommand extends Command
 {
-    private ProductFactoryInterface $productFactory;
-    private ProductRepositoryInterface $productRepository;
-    private string $roundUpProductCode;
-    private ProductVariantFactoryInterface $productVariantFactory;
-    private ChannelRepositoryInterface $channelRepository;
-    private TranslatorInterface $translator;
-
     public function __construct(
-        string $roundUpProductCode,
-        ProductFactoryInterface $productFactory,
-        ProductRepositoryInterface $productRepository,
-        ProductVariantFactoryInterface $productVariantFactory,
-        ChannelRepositoryInterface $channelRepository,
-        TranslatorInterface $translator
+        private string $roundUpProductCode,
+        private ProductFactoryInterface $productFactory,
+        private ProductRepositoryInterface $productRepository,
+        private ProductVariantFactoryInterface $productVariantFactory,
+        private ChannelRepositoryInterface $channelRepository,
+        private TranslatorInterface $translator,
     ) {
         parent::__construct();
-        $this->productFactory = $productFactory;
-        $this->productRepository = $productRepository;
-        $this->roundUpProductCode = $roundUpProductCode;
-        $this->productVariantFactory = $productVariantFactory;
-        $this->channelRepository = $channelRepository;
-        $this->translator = $translator;
     }
 
     protected static $defaultName = 'alexispe:round-up:create-product';
@@ -75,6 +61,7 @@ class CreateRoundUpProductCommand extends Command
                 $this->productRepository->remove($existingProduct);
             } else {
                 $io->error('Product already exists, use --force to delete it');
+
                 return Command::SUCCESS;
             }
         }

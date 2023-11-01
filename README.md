@@ -54,6 +54,7 @@ bin/console alexispe:round-up:create-product
 ### Running plugin tests
 
 ```bash
+docker compose exec app make ecs
 docker compose exec app make phpstan
 docker compose exec app make psalm
 docker compose exec app make phpunit

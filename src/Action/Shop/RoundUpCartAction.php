@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace Alexispe\SyliusRoundUpPlugin\Action\Shop;
 
-use Alexispe\SyliusRoundUpPlugin\Calculator\RoundUpPriceCalculator;
 use Alexispe\SyliusRoundUpPlugin\Resolver\RoundUpProductResolver;
 use Doctrine\ORM\EntityManagerInterface;
 use FOS\RestBundle\View\View;
@@ -24,9 +23,9 @@ use Sylius\Bundle\ResourceBundle\Controller\RequestConfiguration;
 use Sylius\Bundle\ResourceBundle\Controller\RequestConfigurationFactoryInterface;
 use Sylius\Bundle\ResourceBundle\Controller\ViewHandlerInterface;
 use Sylius\Component\Core\Factory\CartItemFactoryInterface;
-use Sylius\Component\Order\Model\OrderInterface;
 use Sylius\Component\Order\CartActions;
 use Sylius\Component\Order\Context\CartContextInterface;
+use Sylius\Component\Order\Model\OrderInterface;
 use Sylius\Component\Order\Model\OrderItemInterface;
 use Sylius\Component\Order\Modifier\OrderItemQuantityModifierInterface;
 use Sylius\Component\Order\Modifier\OrderModifierInterface;
@@ -36,51 +35,25 @@ use Psr\Container\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Webmozart\Assert\Assert;
 
 final class RoundUpCartAction extends AbstractController
 {
-    protected MetadataInterface $metadata;
-    protected RequestConfigurationFactoryInterface $requestConfigurationFactory;
-    private EventDispatcherInterface $eventDispatcher;
-    private ?ViewHandlerInterface $viewHandler;
-    private RedirectHandlerInterface $redirectHandler;
-    private CartContextInterface $cartContext;
-    private OrderModifierInterface $orderModifier;
-    private EntityManagerInterface $entityManager;
-    private CartItemFactoryInterface $cartItemFactory;
-    private OrderItemQuantityModifierInterface $orderItemQuantityModifier;
-    private AuthorizationCheckerInterface $authorizationChecker;
-    private RoundUpProductResolver $roundUpProductResolver;
-
     public function __construct(
         ContainerInterface $container,
-        MetadataInterface $metadata,
-        RequestConfigurationFactoryInterface $requestConfigurationFactory,
-        ?ViewHandlerInterface $viewHandler,
-        EventDispatcherInterface $eventDispatcher,
-        RedirectHandlerInterface $redirectHandler,
-        AuthorizationCheckerInterface $authorizationChecker,
-        CartContextInterface $cartContext,
-        OrderModifierInterface $orderModifier,
-        EntityManagerInterface $entityManager,
-        CartItemFactoryInterface $cartItemFactory,
-        OrderItemQuantityModifierInterface $orderItemQuantityModifier,
-        RoundUpProductResolver $roundUpProductResolver
+        private MetadataInterface $metadata,
+        private RequestConfigurationFactoryInterface $requestConfigurationFactory,
+        private ?ViewHandlerInterface $viewHandler,
+        private EventDispatcherInterface $eventDispatcher,
+        private RedirectHandlerInterface $redirectHandler,
+        private AuthorizationCheckerInterface $authorizationChecker,
+        private CartContextInterface $cartContext,
+        private OrderModifierInterface $orderModifier,
+        private EntityManagerInterface $entityManager,
+        private CartItemFactoryInterface $cartItemFactory,
+        private OrderItemQuantityModifierInterface $orderItemQuantityModifier,
+        private RoundUpProductResolver $roundUpProductResolver,
     ) {
         $this->container = $container;
-        $this->metadata = $metadata;
-        $this->requestConfigurationFactory = $requestConfigurationFactory;
-        $this->eventDispatcher = $eventDispatcher;
-        $this->viewHandler = $viewHandler;
-        $this->redirectHandler = $redirectHandler;
-        $this->cartContext = $cartContext;
-        $this->orderModifier = $orderModifier;
-        $this->entityManager = $entityManager;
-        $this->cartItemFactory = $cartItemFactory;
-        $this->orderItemQuantityModifier = $orderItemQuantityModifier;
-        $this->authorizationChecker = $authorizationChecker;
-        $this->roundUpProductResolver = $roundUpProductResolver;
     }
 
     public function __invoke(Request $request): Response
@@ -104,9 +77,8 @@ final class RoundUpCartAction extends AbstractController
 
         $this->orderModifier->addToOrder($cart, $orderItem);
 
-        $cartManager = $this->entityManager;
-        $cartManager->persist($cart);
-        $cartManager->flush();
+        $this->entityManager->persist($cart);
+        $this->entityManager->flush();
 
         $orderItem = $this->resolveAddedOrderItem($cart, $orderItem);
 
@@ -114,6 +86,7 @@ final class RoundUpCartAction extends AbstractController
         if ($resourceControllerEvent->hasResponse()) {
             /** @var Response $response */
             $response = $resourceControllerEvent->getResponse();
+
             return $response;
         }
 
@@ -122,28 +95,30 @@ final class RoundUpCartAction extends AbstractController
         if ($request->isXmlHttpRequest()) {
             /** @var ViewHandlerInterface $viewHandler */
             $viewHandler = $this->viewHandler;
+
             return $viewHandler->handle($configuration, View::create([], Response::HTTP_CREATED));
         }
 
         return $this->redirectHandler->redirectToResource($configuration, $orderItem);
     }
 
-    protected function getCurrentCart(): OrderInterface
+    private function getCurrentCart(): OrderInterface
     {
         return $this->cartContext->getCart();
     }
 
-    protected function resolveAddedOrderItem(OrderInterface $order, OrderItemInterface $item): OrderItemInterface
+    private function resolveAddedOrderItem(OrderInterface $order, OrderItemInterface $item): OrderItemInterface
     {
         /** @var OrderItemInterface $orderItem */
         $orderItem = $order->getItems()->filter(fn (OrderItemInterface $orderItem): bool => $orderItem->equals($item))->first();
+
         return $orderItem;
     }
 
     /**
      * @throws AccessDeniedException
      */
-    protected function isGrantedOr403(RequestConfiguration $configuration, string $permission): void
+    private function isGrantedOr403(RequestConfiguration $configuration, string $permission): void
     {
         if (!$configuration->hasPermission()) {
             return;

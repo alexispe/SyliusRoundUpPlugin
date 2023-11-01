@@ -22,18 +22,11 @@ use Webmozart\Assert\Assert;
 
 class CartUpdatedListener
 {
-    private RoundUpPriceCalculator $roundUpPriceCalculator;
-    private ObjectManager $orderManager;
-    private RoundUpOrderItemResolver $roundUpOrderItemResolver;
-
     public function __construct(
-        RoundUpPriceCalculator $roundUpPriceCalculator,
-        ObjectManager $orderManager,
-        RoundUpOrderItemResolver $roundUpOrderItemResolver
+        private RoundUpPriceCalculator $roundUpPriceCalculator,
+        private ObjectManager $orderManager,
+        private RoundUpOrderItemResolver $roundUpOrderItemResolver,
     ) {
-        $this->roundUpPriceCalculator = $roundUpPriceCalculator;
-        $this->orderManager = $orderManager;
-        $this->roundUpOrderItemResolver = $roundUpOrderItemResolver;
     }
 
     public function recalculateRoundUp(GenericEvent $event): void
@@ -41,7 +34,6 @@ class CartUpdatedListener
         $cart = $event->getSubject();
         Assert::isInstanceOf($cart, OrderInterface::class);
 
-        $orderManager = $this->orderManager;
         $orderItem = $this->roundUpOrderItemResolver->resolve($cart);
 
         if ($orderItem === null) {
@@ -50,7 +42,7 @@ class CartUpdatedListener
 
         $orderItem->setUnitPrice($this->roundUpPriceCalculator->calculate($cart));
         $orderItem->setImmutable(true);
-        $orderManager->persist($orderItem);
-        $orderManager->flush();
+        $this->orderManager->persist($orderItem);
+        $this->orderManager->flush();
     }
 }

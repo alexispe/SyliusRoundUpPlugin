@@ -10,6 +10,9 @@ phpstan:
 psalm:
 	vendor/bin/psalm
 
+ecs:
+	vendor/bin/ecs check
+
 behat-js:
 	APP_ENV=test vendor/bin/behat --colors --strict --no-interaction -vvv -f progress
 

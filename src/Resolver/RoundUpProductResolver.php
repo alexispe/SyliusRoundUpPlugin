@@ -16,17 +16,12 @@ namespace Alexispe\SyliusRoundUpPlugin\Resolver;
 use Sylius\Component\Core\Model\ProductInterface;
 use Sylius\Component\Core\Repository\ProductRepositoryInterface;
 
-class RoundUpProductResolver {
-
-    private ProductRepositoryInterface $productRepository;
-    private string $roundUpProductCode;
-
+class RoundUpProductResolver
+{
     public function __construct(
-        string $roundUpProductCode,
-        ProductRepositoryInterface $productRepository
+        private string $roundUpProductCode,
+        private ProductRepositoryInterface $productRepository,
     ) {
-        $this->productRepository = $productRepository;
-        $this->roundUpProductCode = $roundUpProductCode;
     }
 
     public function resolve(): ?ProductInterface

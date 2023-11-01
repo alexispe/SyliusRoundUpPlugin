@@ -14,17 +14,13 @@ declare(strict_types=1);
 namespace Alexispe\SyliusRoundUpPlugin\Calculator;
 
 use Alexispe\SyliusRoundUpPlugin\Resolver\RoundUpProductResolver;
-use Sylius\Component\Order\Model\OrderItemInterface;
 use Sylius\Component\Order\Model\OrderInterface;
-use Webmozart\Assert\Assert;
 
-class RoundUpPriceCalculator {
-    private RoundUpProductResolver $roundUpProductResolver;
-
+class RoundUpPriceCalculator
+{
     public function __construct(
-        RoundUpProductResolver $roundUpProductResolver
+        private RoundUpProductResolver $roundUpProductResolver,
     ) {
-        $this->roundUpProductResolver = $roundUpProductResolver;
     }
 
     public function calculate(OrderInterface $cart): int
@@ -32,7 +28,7 @@ class RoundUpPriceCalculator {
         $total = $cart->getTotal();
 
         if ($cart instanceof \Sylius\Component\Core\Model\OrderInterface) {
-            $items = $cart->getItems()->filter(function(\Sylius\Component\Core\Model\OrderItemInterface $item) {
+            $items = $cart->getItems()->filter(function (\Sylius\Component\Core\Model\OrderItemInterface $item) {
                 return $item->getProduct() === $this->roundUpProductResolver->resolve();
             });
 
