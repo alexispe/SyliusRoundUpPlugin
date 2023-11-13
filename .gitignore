@@ -19,3 +19,5 @@
 
 .idea
 supervisord.log
+
+/.docker/mysql/data

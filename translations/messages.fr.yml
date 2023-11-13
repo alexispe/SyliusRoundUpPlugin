@@ -1,7 +1,6 @@
 alexispe_sylius_round_up_plugin:
     ui:
-        product_not_found: Produit non trouvé
         round_up_cart: Arrondir le panier
         cart_rounded_up: Votre panier a été arrondi
-    product:
-        round_up: Arrondi
+        undo_cart_rounded_up: L'arrondi de votre panier a été annulé
+        round_up_total: Arrondi

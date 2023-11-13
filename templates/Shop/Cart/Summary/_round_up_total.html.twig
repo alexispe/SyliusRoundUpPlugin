@@ -1,0 +1,8 @@
+{% import "@SyliusShop/Common/Macro/money.html.twig" as money %}
+
+{% if cart.getAdjustmentsTotal('round_up') %}
+    <tr>
+        <td>{{ 'alexispe_sylius_round_up_plugin.ui.round_up_total'|trans }}:</td>
+        <td class="right aligned" {{ sylius_test_html_attribute('cart-round-up-total') }}>{{ money.convertAndFormat(cart.getAdjustmentsTotal('round_up')) }}</td>
+    </tr>
+{% endif %}

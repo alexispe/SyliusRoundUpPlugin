@@ -1,7 +1,15 @@
-<form action="{{ path('alexispe_sylius_round_up_plugin_shop_round_up_cart') }}" method="POST" class="ui segment">
+{% set rounded = cart.getAdjustmentsTotal('round_up') %}
+{% set action = rounded ? path('alexispe_sylius_round_up_plugin_shop_undo_round_up_cart') : path('alexispe_sylius_round_up_plugin_shop_round_up_cart') %}
 
-    <button type="submit" class="mini ui button labeled icon fluid">
-        <i class="icon arrow alternate circle up outline"></i>
-        {{ 'alexispe_sylius_round_up_plugin.ui.round_up_cart'|trans }}
-    </button>
+<form action="{{ action }}" method="POST" class="ui segment">
+    {% if rounded %}<input type="hidden" name="_method" value="DELETE" />{% endif %}
+
+    <div class="ui form">
+        <div class="inline field">
+            <div class="ui toggle checkbox">
+                <input id="cart_round_up_checkbox" type="checkbox" tabindex="0" class="hidden" {% if rounded %}checked{% endif %} onchange="this.form.submit()">
+                <label for="cart_round_up_checkbox">{{ 'alexispe_sylius_round_up_plugin.ui.round_up_cart'|trans }}</label>
+            </div>
+        </div>
+    </div>
 </form>

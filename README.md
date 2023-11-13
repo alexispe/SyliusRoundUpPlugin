@@ -36,9 +36,11 @@ imports:
     - { resource: "@AlexispeSyliusRoundUpPlugin/config/config.yml" }
 ```
 
-### 4. Create round up product
+### 4. Show round up line in cart summary
+
+Override template `Cart\Summary\_totals.html.twig` and add line 52 (before cart total `tr`):
 ```
-bin/console alexispe:round-up:create-product
+{% include '@AlexispeSyliusRoundUpPlugin/Shop/Cart/Summary/_round_up_total.html.twig' %}
 ```
 
 ## Contribute

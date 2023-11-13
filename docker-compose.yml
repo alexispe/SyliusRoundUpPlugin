@@ -23,6 +23,8 @@ services:
         platform: linux/amd64
         environment:
             MYSQL_ROOT_PASSWORD: mysql
+        volumes:
+            - ./.docker/mysql/data:/var/lib/mysql:delegated
         ports:
             - ${MYSQL_PORT:-3306}:3306
         networks:

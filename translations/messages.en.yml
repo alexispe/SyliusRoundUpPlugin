@@ -1,7 +1,6 @@
 alexispe_sylius_round_up_plugin:
     ui:
-        product_not_found: Product not found
         round_up_cart: Round up your cart
         cart_rounded_up: Your cart has been rounded up
-    product:
-        round_up: Round up
+        undo_cart_rounded_up: Round up of your cart has been removed
+        round_up_total: Round up

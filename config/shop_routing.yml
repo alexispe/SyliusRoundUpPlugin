@@ -1,13 +1,21 @@
-# Delete these routes and define your own shop routes here
-
 alexispe_sylius_round_up_plugin_shop_round_up_cart:
     path: /cart/round-up
     methods: [POST]
     defaults:
-        _controller: Alexispe\SyliusRoundUpPlugin\Action\Shop\RoundUpCartAction
+        _controller: Alexispe\SyliusRoundUpPlugin\Controller\Shop\RoundUpController::addToCart
         _format: json
         _sylius:
             redirect:
                 route: sylius_shop_cart_summary
                 parameters: {}
-            flash: sylius.cart.add_item
+
+alexispe_sylius_round_up_plugin_shop_undo_round_up_cart:
+    path: /cart/round-up
+    methods: [DELETE]
+    defaults:
+        _controller: Alexispe\SyliusRoundUpPlugin\Controller\Shop\RoundUpController::removeFromCart
+        _format: json
+        _sylius:
+            redirect:
+                route: sylius_shop_cart_summary
+                parameters: {}

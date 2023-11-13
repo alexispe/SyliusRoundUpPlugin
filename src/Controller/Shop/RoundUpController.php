@@ -11,86 +11,71 @@
 
 declare(strict_types=1);
 
-namespace Alexispe\SyliusRoundUpPlugin\Action\Shop;
+namespace Alexispe\SyliusRoundUpPlugin\Controller\Shop;
 
-use Alexispe\SyliusRoundUpPlugin\Resolver\RoundUpProductResolver;
+use Alexispe\SyliusRoundUpPlugin\Calculator\RoundUpPriceCalculator;
+use Alexispe\SyliusRoundUpPlugin\Model\AdjustmentInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use FOS\RestBundle\View\View;
+use Psr\Container\ContainerInterface;
 use Sylius\Bundle\ResourceBundle\Controller\AuthorizationCheckerInterface;
-use Sylius\Bundle\ResourceBundle\Controller\EventDispatcherInterface;
 use Sylius\Bundle\ResourceBundle\Controller\RedirectHandlerInterface;
 use Sylius\Bundle\ResourceBundle\Controller\RequestConfiguration;
 use Sylius\Bundle\ResourceBundle\Controller\RequestConfigurationFactoryInterface;
 use Sylius\Bundle\ResourceBundle\Controller\ViewHandlerInterface;
-use Sylius\Component\Core\Factory\CartItemFactoryInterface;
 use Sylius\Component\Order\CartActions;
 use Sylius\Component\Order\Context\CartContextInterface;
+use Sylius\Component\Order\Factory\AdjustmentFactoryInterface;
 use Sylius\Component\Order\Model\OrderInterface;
-use Sylius\Component\Order\Model\OrderItemInterface;
-use Sylius\Component\Order\Modifier\OrderItemQuantityModifierInterface;
-use Sylius\Component\Order\Modifier\OrderModifierInterface;
 use Sylius\Component\Resource\Metadata\MetadataInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Psr\Container\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
-final class RoundUpCartAction extends AbstractController
+final class RoundUpController extends AbstractController
 {
     public function __construct(
         ContainerInterface $container,
         private MetadataInterface $metadata,
         private RequestConfigurationFactoryInterface $requestConfigurationFactory,
         private ?ViewHandlerInterface $viewHandler,
-        private EventDispatcherInterface $eventDispatcher,
         private RedirectHandlerInterface $redirectHandler,
         private AuthorizationCheckerInterface $authorizationChecker,
         private CartContextInterface $cartContext,
-        private OrderModifierInterface $orderModifier,
         private EntityManagerInterface $entityManager,
-        private CartItemFactoryInterface $cartItemFactory,
-        private OrderItemQuantityModifierInterface $orderItemQuantityModifier,
-        private RoundUpProductResolver $roundUpProductResolver,
+        private AdjustmentFactoryInterface $adjustmentFactory,
+        private RoundUpPriceCalculator $roundUpPriceCalculator,
+        private TranslatorInterface $translator,
     ) {
         $this->container = $container;
     }
 
-    public function __invoke(Request $request): Response
+    public function addToCart(Request $request): Response
     {
         $cart = $this->getCurrentCart();
 
         $configuration = $this->requestConfigurationFactory->create($this->metadata, $request);
 
         $this->isGrantedOr403($configuration, CartActions::ADD);
-        $roundUpProduct = $this->roundUpProductResolver->resolve();
 
-        if (null === $roundUpProduct) {
-            $this->addFlash('error', 'alexispe_sylius_round_up_plugin.ui.product_not_found');
+        $cart->removeAdjustments(AdjustmentInterface::ROUND_UP_ADJUSTMENT);
 
-            return $this->redirectHandler->redirectToIndex($configuration);
-        }
+        $roundUpAmount = $this->roundUpPriceCalculator->calculate($cart);
 
-        $orderItem = $this->cartItemFactory->createForProduct($roundUpProduct);
+        /** @var AdjustmentInterface $adjustment */
+        $adjustment = $this->adjustmentFactory->createNew();
+        $adjustment->setType(AdjustmentInterface::ROUND_UP_ADJUSTMENT);
+        $adjustment->setAmount($roundUpAmount);
+        $adjustment->setLabel('Round Up');
 
-        $this->orderItemQuantityModifier->modify($orderItem, 1);
-
-        $this->orderModifier->addToOrder($cart, $orderItem);
+        $cart->addAdjustment($adjustment);
 
         $this->entityManager->persist($cart);
         $this->entityManager->flush();
 
-        $orderItem = $this->resolveAddedOrderItem($cart, $orderItem);
-
-        $resourceControllerEvent = $this->eventDispatcher->dispatchPostEvent(CartActions::ADD, $configuration, $orderItem);
-        if ($resourceControllerEvent->hasResponse()) {
-            /** @var Response $response */
-            $response = $resourceControllerEvent->getResponse();
-
-            return $response;
-        }
-
-        $this->addFlash('success', 'alexispe_sylius_round_up_plugin.ui.cart_rounded_up');
+        $this->addFlash('success', $this->translator->trans('alexispe_sylius_round_up_plugin.ui.cart_rounded_up'));
 
         if ($request->isXmlHttpRequest()) {
             /** @var ViewHandlerInterface $viewHandler */
@@ -99,20 +84,37 @@ final class RoundUpCartAction extends AbstractController
             return $viewHandler->handle($configuration, View::create([], Response::HTTP_CREATED));
         }
 
-        return $this->redirectHandler->redirectToResource($configuration, $orderItem);
+        return $this->redirectHandler->redirectToResource($configuration, $cart);
+    }
+
+    public function removeFromCart(Request $request): Response
+    {
+        $cart = $this->getCurrentCart();
+
+        $configuration = $this->requestConfigurationFactory->create($this->metadata, $request);
+
+        $this->isGrantedOr403($configuration, CartActions::REMOVE);
+
+        $cart->removeAdjustments(AdjustmentInterface::ROUND_UP_ADJUSTMENT);
+
+        $this->entityManager->persist($cart);
+        $this->entityManager->flush();
+
+        $this->addFlash('success', $this->translator->trans('alexispe_sylius_round_up_plugin.ui.undo_cart_rounded_up'));
+
+        if ($request->isXmlHttpRequest()) {
+            /** @var ViewHandlerInterface $viewHandler */
+            $viewHandler = $this->viewHandler;
+
+            return $viewHandler->handle($configuration, View::create([], Response::HTTP_CREATED));
+        }
+
+        return $this->redirectHandler->redirectToResource($configuration, $cart);
     }
 
     private function getCurrentCart(): OrderInterface
     {
         return $this->cartContext->getCart();
-    }
-
-    private function resolveAddedOrderItem(OrderInterface $order, OrderItemInterface $item): OrderItemInterface
-    {
-        /** @var OrderItemInterface $orderItem */
-        $orderItem = $order->getItems()->filter(fn (OrderItemInterface $orderItem): bool => $orderItem->equals($item))->first();
-
-        return $orderItem;
     }
 
     /**

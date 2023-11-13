@@ -1,46 +1,24 @@
-parameters:
-    alexispe_sylius_round_up_plugin.order_item_quantity_modifier.limit: 1
-    alexispe_sylius_round_up_plugin.round_up_product_code: 'ROUND_UP'
-
 services:
     _defaults:
         autowire: true
         autoconfigure: true
         public: false
         
-    Alexispe\SyliusRoundUpPlugin\Action\Shop\RoundUpCartAction:
+    Alexispe\SyliusRoundUpPlugin\Controller\Shop\RoundUpController:
         arguments:
             $metadata: '@=service("sylius.resource_registry").get("sylius.order_item")'
             $entityManager: '@sylius.manager.order'
-            $cartItemFactory: '@sylius.custom_factory.order_item'
             $authorizationChecker: '@sylius.resource_controller.authorization_checker.disabled'
+            $adjustmentFactory: '@sylius.factory.adjustment'
+            $roundUpPriceCalculator: '@alexispe_sylius_round_up_plugin.calculator.round_up_price_calculator'
 
-    Alexispe\SyliusRoundUpPlugin\Resolver\RoundUpProductResolver:
+    alexispe_sylius_round_up_plugin.processor.round_up_processor:
+        class: Alexispe\SyliusRoundUpPlugin\Processor\RoundUpProcessor
         arguments:
-            $roundUpProductCode: '%alexispe_sylius_round_up_plugin.round_up_product_code%'
-            $productRepository: '@sylius.repository.product'
-        
-    Alexispe\SyliusRoundUpPlugin\Resolver\RoundUpOrderItemResolver:
-        arguments:
-            $roundUpProductCode: '%alexispe_sylius_round_up_plugin.round_up_product_code%'
-
-    alexispe_sylius_round_up_plugin.resolver.round_up_product_resolver:
-        alias: Alexispe\SyliusRoundUpPlugin\Resolver\RoundUpProductResolver
-    
-    Alexispe\SyliusRoundUpPlugin\Calculator\RoundUpPriceCalculator:
-        arguments:
-            $roundUpProductResolver: '@alexispe_sylius_round_up_plugin.resolver.round_up_product_resolver'
-
-    alexispe_sylius_round_up_plugin.command.create_round_up_product:
-        class: Alexispe\SyliusRoundUpPlugin\Command\CreateRoundUpProductCommand
-        arguments:
-            $roundUpProductCode: '%alexispe_sylius_round_up_plugin.round_up_product_code%'
+            - '@sylius.factory.adjustment'
+            - '@alexispe_sylius_round_up_plugin.calculator.round_up_price_calculator'
         tags:
-            - { name: console.command }
+            - { name: sylius.order_processor, priority: 90 }
     
-    alexispe_sylius_round_up_plugin.listener.cart_updated:
-        class: Alexispe\SyliusRoundUpPlugin\EventListener\CartUpdatedListener
-        arguments:
-            $orderManager: '@sylius.manager.order'
-        tags:
-            - { name: kernel.event_listener, event: sylius.order.post_update, method: recalculateRoundUp }
+    alexispe_sylius_round_up_plugin.calculator.round_up_price_calculator:
+        class: Alexispe\SyliusRoundUpPlugin\Calculator\RoundUpPriceCalculator
