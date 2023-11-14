@@ -70,5 +70,5 @@ This plugin is completely free and released under the MIT License.
 
 ## Contact
 
-I'm a 🇫🇷 freelance web developer.
+I'm a 🇫🇷 freelance Sylius developer.
 If you want to contact me, e-mail me to contact@alexis-petit.fr. I will try to answer you as soon as possible.
