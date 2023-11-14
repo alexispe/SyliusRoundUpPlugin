@@ -2,7 +2,8 @@
 
 ![Build workflow status](https://github.com/alexispe/SyliusRoundUpPlugin/actions/workflows/build.yml/badge.svg)
 
-This plugin simply round up your cart.
+This plugin simply round up your cart.  
+Then you can choose to donate the difference to a charity, plant a tree or keep it for you as a tip...
 
 ![Screenshot of cart page](https://github.com/alexispe/SyliusRoundUpPlugin/blob/main/docs/demo-cart.png?raw=true)
 
